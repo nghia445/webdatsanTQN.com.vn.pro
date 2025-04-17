@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lật Ô Trúng Thưởng VIP - Ưu Đãi Đặt Sân</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        background: linear-gradient(
+          135deg,
+          #6a1b9a,
+          #004d40
+        ); /* Màu nền "vip" khác */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        color: #fff;
+      }
+
+      .container {
+        background-color: rgba(255, 255, 255, 0.1);
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        text-align: center;
+      }
+
+      h2 {
+        color: #fff;
+        margin-bottom: 20px;
+        font-size: 2.5em;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+      }
+
+      .instruction {
+        font-size: 1.1em;
+        margin-bottom: 30px;
+        color: #eee;
+      }
+
+      .grid-container {
+        display: grid;
+        grid-template-columns: repeat(3, 100px); /* Lưới 3x3 */
+        grid-gap: 15px;
+        margin: 20px auto;
+      }
+
+      .grid-cell {
+        width: 100px;
+        height: 100px;
+        background-color: #3419ce;
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 2em;
+        color: #fff;
+        cursor: pointer;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease-in-out,
+          background-color 0.3s ease-in-out;
+      }
+
+      .grid-cell:hover {
+        transform: scale(1.05);
+      }
+
+      .grid-cell.revealed {
+        background-color: #26a69a;
+        font-size: 1em;
+        padding: 10px;
+        text-align: center;
+        white-space: pre-line;
+        pointer-events: none; /* Ngăn lật lại ô đã mở */
+      }
+
+      .controls {
+        margin-top: 20px;
+        color: #eee;
+      }
+
+      #attempts {
+        font-weight: bold;
+        color: #fff;
+      }
+
+      #result {
+        margin-top: 30px;
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #fff;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+      }
+
+      .hidden {
+        display: none;
+      }
+      /* Liên kết Quay về trang chủ */
+      .go-home {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .go-home a {
+        color: #2a2a2a;
+        font-size: 16px;
+        text-decoration: none;
+      }
+
+      .go-home a:hover {
+        text-decoration: underline;
+      }
+
+      /* Responsive design */
+      @media (max-width: 768px) {
+        form {
+          width: 90%;
+        }
+
+        h1 {
+          font-size: 28px;
+        }
+      }
+      .go-home {
+        position: fixed; /* Giữ vị trí cố định khi cuộn trang */
+        bottom: 20px; /* Cách dưới của màn hình 20px */
+        right: 20px; /* Cách phải của màn hình 20px */
+        background-color: #f0f0f0; /* Màu nền nhẹ cho dễ nhìn */
+        padding: 10px 20px; /* Khoảng cách trong */
+        border-radius: 5px; /* Bo góc */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+      }
+
+      .go-home a {
+        text-decoration: none; /* Không có gạch chân */
+        color: #333; /* Màu chữ */
+        font-weight: bold; /* Chữ đậm */
+      }
+
+      .go-home a:hover {
+        color: #007bff; /* Màu chữ khi di chuột */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Lật Ô Trúng Thưởng VIP!</h2>
+      <p class="instruction">
+        Chọn và lật các ô để khám phá ưu đãi đặc biệt. Bạn có
+        <span id="attempts">2</span> lượt.
+      </p>
+      <div class="grid-container">
+        <div class="grid-cell" data-index="0">?</div>
+        <div class="grid-cell" data-index="1">?</div>
+        <div class="grid-cell" data-index="2">?</div>
+        <div class="grid-cell" data-index="3">?</div>
+        <div class="grid-cell" data-index="4">?</div>
+        <div class="grid-cell" data-index="5">?</div>
+        <div class="grid-cell" data-index="6">?</div>
+        <div class="grid-cell" data-index="7">?</div>
+        <div class="grid-cell" data-index="8">?</div>
+      </div>
+      <div class="controls">
+        Lượt còn lại: <span id="attempts-display">2</span>
+      </div>
+      <div id="result" class="hidden"></div>
+      <div class="go-home">
+        <a href="index.html">Quay về trang chủ</a>
+      </div>
+    </div>
+
+    <script>
+      const gridContainer = document.querySelector(".grid-container");
+      const cells = document.querySelectorAll(".grid-cell");
+      const attemptsDisplay = document.getElementById("attempts-display");
+      const resultDisplay = document.getElementById("result");
+      const offers = [
+        "Giảm 30% cho lần đặt sân VIP tiếp theo!",
+        "Tặng thêm 60 phút chơi vào bất kỳ khung giờ!",
+        "Miễn phí thuê trang phục và bóng cao cấp!",
+        null, // Ô trống
+        null, // Ô trống
+        "Ưu tiên chọn sân tốt nhất!",
+        null, // Ô trống
+        "Giảm giá đặc biệt cho sự kiện của bạn!",
+        null, // Ô trống
+      ];
+      let attempts = 2;
+      let revealedCount = 0;
+      const offerIndices = shuffleArray(offers.map((_, index) => index)); // Trộn thứ tự các ưu đãi
+
+      function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+      }
+
+      cells.forEach((cell, index) => {
+        cell.addEventListener("click", () => {
+          if (attempts > 0 && !cell.classList.contains("revealed")) {
+            const offerIndex = offerIndices[index];
+            const offer = offers[offerIndex];
+            cell.classList.add("revealed");
+            cell.textContent = offer || "Chúc bạn may mắn lần sau!";
+            attempts--;
+            attemptsDisplay.textContent = attempts;
+            revealedCount++;
+
+            if (offer) {
+              resultDisplay.textContent = `Bạn đã tìm thấy ưu đãi VIP:\n${offer}`;
+              resultDisplay.classList.remove("hidden");
+              // Thêm logic xử lý ưu đãi VIP thực tế ở đây
+            }
+
+            if (attempts === 0 && !resultDisplay.classList.contains("hidden")) {
+              resultDisplay.textContent += "\nBạn đã hết lượt.";
+            } else if (
+              attempts === 0 &&
+              resultDisplay.classList.contains("hidden") &&
+              revealedCount > 0
+            ) {
+              resultDisplay.textContent =
+                "Bạn đã hết lượt. Chúc bạn may mắn lần sau!";
+              resultDisplay.classList.remove("hidden");
+            } else if (attempts === 0 && revealedCount === 0) {
+              resultDisplay.textContent =
+                "Bạn đã hết lượt và không tìm thấy ưu đãi nào. Chúc bạn may mắn lần sau!";
+              resultDisplay.classList.remove("hidden");
+            }
+          } else if (attempts === 0) {
+            resultDisplay.textContent = "Bạn đã hết lượt chơi.";
+            resultDisplay.classList.remove("hidden");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

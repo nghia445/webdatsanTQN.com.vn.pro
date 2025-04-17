@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng Ký và Hủy Sân Bóng Đá</title>
+    <link rel="stylesheet" href="Datsan.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Tiêu đề trang -->
+      <header>
+        <h1>Đăng Ký và Hủy Sân Bóng Đá</h1>
+      </header>
+
+      <!-- Form Đăng Ký Sân -->
+      <section id="register-form" class="form-container">
+        <h2>Đăng Ký Sân</h2>
+        <form action="#" method="POST">
+          <div class="form-group">
+            <label for="name">Họ và Tên</label>
+            <input type="text" id="name" name="name" required />
+          </div>
+
+          <div class="form-group">
+            <label for="datetime">Ngày và Giờ</label>
+            <input
+              type="datetime-local"
+              id="datetime"
+              name="datetime"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="field">Sân Số</label>
+            <input
+              type="number"
+              id="field"
+              name="field"
+              min="1"
+              max="4"
+              required
+            />
+          </div>
+
+          <button type="submit" class="submit-btn">Đăng Ký</button>
+        </form>
+      </section>
+
+      <!-- Nút để hiển thị form Hủy Sân -->
+      <button class="toggle-btn" onclick="toggleForms()">Hủy Sân</button>
+
+      <!-- Form Hủy Sân (ban đầu ẩn) -->
+      <section id="cancel-form" class="form-container" style="display: none">
+        <h2>Hủy Sân</h2>
+        <form action="#" method="POST">
+          <div class="form-group">
+            <label for="cancel-booking-id">Mã Đặt Sân</label>
+            <input
+              type="text"
+              id="cancel-booking-id"
+              name="cancel-booking-id"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="cancel-name">Họ và Tên</label>
+            <input type="text" id="cancel-name" name="cancel-name" required />
+          </div>
+
+          <div class="form-group">
+            <label for="cancel-phone">Số Điện Thoại</label>
+            <input type="tel" id="cancel-phone" name="cancel-phone" required />
+          </div>
+
+          <button type="submit" class="submit-btn">Hủy Đặt</button>
+        </form>
+      </section>
+    </div>
+    <div class="go-home">
+      <a href="index.html">Quay về trang chủ</a>
+    </div>
+    <script>
+      // Hàm để hiển thị/ẩn form Hủy Sân và ẩn form Đăng Ký Sân khi Hủy Sân được click
+      function toggleForms() {
+        var registerForm = document.getElementById("register-form");
+        var cancelForm = document.getElementById("cancel-form");
+
+        // Nếu form đăng ký đang hiển thị, ẩn nó đi và hiển thị form hủy sân
+        if (registerForm.style.display !== "none") {
+          registerForm.style.display = "none";
+          cancelForm.style.display = "block";
+        } else {
+          // Ngược lại, nếu form hủy sân đang hiển thị, ẩn form hủy sân và hiển thị lại form đăng ký
+          registerForm.style.display = "block";
+          cancelForm.style.display = "none";
+        }
+      }
+    </script>
+  </body>
+</html>
